@@ -20,11 +20,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jadgroup.urbandictionary.R;
+import com.jadgroup.urbandictionary.UrbanApplication;
 import com.jadgroup.urbandictionary.adapters.DictionaryAdapter;
+import com.jadgroup.urbandictionary.interfaces.AlbumAPIs;
 import com.jadgroup.urbandictionary.models.Album;
+import com.jadgroup.urbandictionary.models.AlbumList;
 import com.jadgroup.urbandictionary.viewmodels.ViewModelMainActivity;
 
 import java.util.List;
+
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressBar progress_circular;
     RecyclerView rv_dictionary;
+
+    @Inject
     DictionaryAdapter dictionaryAdapter;
 
     EditText editTextSearch;
@@ -43,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
+        ((UrbanApplication) getApplication()).getComponent().inject(this);
         initViewModel();
         initViews();
         initRecyclerView();
@@ -60,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                viewModelMainActivity.getAlbumList(charSequence.toString());
+                getAlbumList(charSequence.toString());
                 showProgress();
             }
 
@@ -108,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         viewModelMainActivity = ViewModelProviders.of((MainActivity) context)
                 .get(ViewModelMainActivity.class);
         viewModelMainActivity.getAlbumLiveData().observe((LifecycleOwner) context, albumListObsever);
-        viewModelMainActivity.getAlbumList("");
+        getAlbumList("");
     }
 
     private final Observer<List<Album>> albumListObsever = new Observer<List<Album>>() {
@@ -124,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         rv_dictionary = findViewById(R.id.rv_dictionary);
-        dictionaryAdapter = new DictionaryAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         rv_dictionary.setLayoutManager(layoutManager);
         rv_dictionary.setAdapter(dictionaryAdapter);
@@ -138,5 +150,24 @@ public class MainActivity extends AppCompatActivity {
     public void hideProgress() {
         progress_circular.setVisibility(View.GONE);
         rv_dictionary.setVisibility(View.VISIBLE);
+    }
+
+    @Inject
+    Retrofit retroClient;
+
+    public void getAlbumList(String term) {
+        retroClient.create(AlbumAPIs.class).getAlbumList(term).enqueue(new Callback<AlbumList>() {
+            @Override
+            public void onResponse(Call<AlbumList> call, Response<AlbumList> response) {
+                AlbumList albumList = response.body();
+                Log.d("response : onResponse", albumList.getAlbums().size() + "");
+                viewModelMainActivity.setAlbumLiveData(albumList.getAlbums());
+            }
+
+            @Override
+            public void onFailure(Call<AlbumList> call, Throwable t) {
+
+            }
+        });
     }
 }

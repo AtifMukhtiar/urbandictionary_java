@@ -27,26 +27,6 @@ import static org.mockito.Mockito.doAnswer;
 @RunWith(MockitoJUnitRunner.class)
 public class Dictionary {
 
-    @Test
-    public void testApiResponseOK() {
-
-        RetroClient.getClient().getAlbumList("").enqueue(new Callback<AlbumList>() {
-            @Override
-            public void onResponse(Call<AlbumList> call, Response<AlbumList> response) {
-                assertEquals(response.code(), 200);
-                System.out.println("passs");
-            }
-
-            @Override
-            public void onFailure(Call<AlbumList> call, Throwable t) {
-                fail();
-                System.out.println("fail");
-            }
-        });
-
-        System.out.println("outside");
-    }
-
     @Mock
     ViewModelMainActivity viewModelMainActivity;
 

@@ -7,13 +7,18 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.jadgroup.urbandictionary.models.AlbumList;
 import com.jadgroup.urbandictionary.networks.RetroClient;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -28,12 +33,18 @@ import static org.junit.Assert.fail;
 @RunWith(MockitoJUnitRunner.class)
 public class DictionaryInstrumentedTest {
 
+
     @Test
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         assertEquals("com.jadgroup.urbandictionary", appContext.getPackageName());
+    }
+
+    @Before
+    public void injectSetup() {
+
     }
 
 

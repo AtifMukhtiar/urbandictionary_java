@@ -6,11 +6,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
@@ -36,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Context context;
     ViewModelMainActivity viewModelMainActivity;
@@ -48,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
     DictionaryAdapter dictionaryAdapter;
 
     EditText editTextSearch;
-    Spinner spinnerSort;
+    TextView txtView_thumbsUp;
+    TextView txtView_thumbsDown;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        initSpinner();
+        initRadio();
         progress_circular = findViewById(R.id.progress_circular);
         editTextSearch = findViewById(R.id.editTextSearch);
         editTextSearch.addTextChangedListener(new TextWatcher() {
@@ -79,42 +79,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                txtView_thumbsUp.setSelected(false);
+                txtView_thumbsDown.setSelected(false);
             }
         });
     }
 
-    private void initSpinner() {
-        spinnerSort = findViewById(R.id.spinnerSort);
-        ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter
-                .createFromResource(this, R.array.sort_arrays,
-                        R.layout.spinner_text);
-        staticAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSort.setAdapter(staticAdapter);
-        spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                switch (position) {
-                    case 0:
-                        break;
-                    case 1:
-                        if (dictionaryAdapter != null) {
-                            dictionaryAdapter.sortList(true);
-                        }
-                        break;
-                    case 2:
-                        if (dictionaryAdapter != null) {
-                            dictionaryAdapter.sortList(false);
-                        }
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+    private void initRadio() {
+        txtView_thumbsUp = findViewById(R.id.txtView_thumbsUp);
+        txtView_thumbsDown = findViewById(R.id.txtView_thumbsDown);
+        txtView_thumbsUp.setOnClickListener(this);
+        txtView_thumbsDown.setOnClickListener(this);
     }
 
     private void initViewModel() {
@@ -170,4 +145,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.txtView_thumbsUp:
+                txtView_thumbsUp.setSelected(true);
+                txtView_thumbsDown.setSelected(false);
+                dictionaryAdapter.sortList(true);
+                break;
+            case R.id.txtView_thumbsDown:
+                txtView_thumbsUp.setSelected(false);
+                txtView_thumbsDown.setSelected(true);
+                dictionaryAdapter.sortList(false);
+
+                break;
+        }
+    }// end of onClick
 }

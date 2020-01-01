@@ -42,11 +42,6 @@ public class DictionaryInstrumentedTest {
         assertEquals("com.jadgroup.urbandictionary", appContext.getPackageName());
     }
 
-    @Before
-    public void injectSetup() {
-
-    }
-
 
     private final Object lock = new Object();
 

@@ -1,8 +1,6 @@
 package com.jadgroup.urbandictionary;
 
 import com.jadgroup.urbandictionary.models.Album;
-import com.jadgroup.urbandictionary.models.AlbumList;
-import com.jadgroup.urbandictionary.networks.RetroClient;
 import com.jadgroup.urbandictionary.viewmodels.ViewModelMainActivity;
 
 import org.junit.Test;
@@ -16,12 +14,7 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doAnswer;
 
 @RunWith(MockitoJUnitRunner.class)

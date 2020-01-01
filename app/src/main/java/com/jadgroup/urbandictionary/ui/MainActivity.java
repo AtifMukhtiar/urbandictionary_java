@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initViews() {
-        initRadio();
+        initSortingViews();
         progress_circular = findViewById(R.id.progress_circular);
         editTextSearch = findViewById(R.id.editTextSearch);
         editTextSearch.addTextChangedListener(new TextWatcher() {
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void initRadio() {
+    private void initSortingViews() {
         txtView_thumbsUp = findViewById(R.id.txtView_thumbsUp);
         txtView_thumbsDown = findViewById(R.id.txtView_thumbsDown);
         txtView_thumbsUp.setOnClickListener(this);
